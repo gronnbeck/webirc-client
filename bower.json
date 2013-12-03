@@ -2,6 +2,6 @@
     "name":  "webirc-client",
     "version": "0.0.1",
     "dependencies": {
-        "angularjs": "latest"
+        "angular": "latest"
     }
 }
