@@ -7,7 +7,9 @@
 </head>
 <body ng-app="irc-client">
 	<div ng-controller="LogController">
-		
+		<div ng-repeat="event in events">
+			{{event.data}}
+		</div>
 	</div>	
 </body>
 </html>
