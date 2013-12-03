@@ -1,0 +1,14 @@
+{
+	"name": "webirc-client",
+	"version": "0.0.0",
+	"description": "Simple web-based irc-client using the webirc api project",
+	"main": "app.js",
+	"author": "Ken Grønnbeck <kengroenn@gmail.com>",
+	"license": "MIT",
+	"scripts": {
+		"install": "./node_modules/bower/bin/bower install"
+	},
+	"devDependencies": {
+		"bower": "1.2.8"
+	}
+}
