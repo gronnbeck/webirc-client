@@ -5,9 +5,10 @@ app.controller('LogController', ['$scope', function($scope) {
 
 	$scope.events = [];
 	websocket.onmessage = function(e) {
-		console.log(e);
+		var parsed = JSON.parse(e.data);
 		$scope.$apply(function() {
-			$scope.events.push(e);
+			if (parsed.type == 'msg') $scope.events.push( JSON.stringify(parsed) );
+			else console.log(parsed);
 		});
 	};
 
