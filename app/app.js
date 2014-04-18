@@ -1,6 +1,12 @@
 var app = angular.module('irc-client', ['ngRoute'])
 
 app.config(function($routeProvider) {
+
+	$routeProvider
+	.when('/', {
+		templateUrl: 'templates/logs.html',
+		controller: 'LogController'
+	})
 })
 
 app.factory('Verifier', function() {
