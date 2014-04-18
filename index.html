@@ -19,8 +19,8 @@
 	<div class="logs" ng-controller="LogController">
 		<div class="log" ng-repeat="event in events">
 			<span class="timestamp">{{parseDate(event.ts)}}</span>
-			<span class="to">{{event.to}}</span>
 			<span class="from">{{event.from}}</span>
+			<span class="to">{{event.to}}</span>
 			<span class="payload">{{event.payload}}</span>
 		</div>
 

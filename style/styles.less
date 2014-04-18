@@ -1,3 +1,35 @@
 body {
-  
+  background: rgba(35, 35, 35, 1.0);
+  color: #fff;
+  font-family: 'Helvetica Nueu', 'Helvetica', sans-serif;
+}
+h1 {
+  font-size: 3em;
+}
+
+.logs {
+
+  .log {
+    margin: 0.2em 0;
+  }
+
+  .timestamp {
+    color: grey;
+    font-weight: lighter;
+    font-size: 0.8em;
+    margin-right: 0.2em;
+  }
+
+  .to {
+    &::before {
+      content: "-> "
+    }
+    &::after {
+      content: ": "
+    }
+  }
+
+  .from, .to {
+    font-weight: bolder
+  }
 }
