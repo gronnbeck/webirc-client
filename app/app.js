@@ -35,56 +35,50 @@ app.factory('verify', ['Verifier', function(Verifier) {
 	}
 }])
 
-app.factory('Connection', function($location) {
+app.factory('Connection', function() {
 
-	function Connection(url, listeners) {
-		var self = this
-		, listeners = listeners || []
+	function Connection(url) {
 
-		this.send = function(message) {
-			websocket.send(JSON.stringify(message))
-		}
+		this.connect = function(config, listeners) {
+			var self = this
+			, listeners = listeners || []
+			, connection = config.connection
 
-		this.connect = function() {
-			var locationSearch = $location.search()
-			, connection = {
-				server: locationSearch.server,
-				nick: locationSearch.nick,
-				channels: locationSearch.channels.split(',').map(function(chan) {
-					if (chan.indexOf('#') == 0) return chan
-					return '#' + chan
+			self.send = function(message) {
+				websocket.send(JSON.stringify(message))
+			}
+
+			var connect = function() {
+				if (config.key != null) {
+					var reconnect = {
+						type: 'reconnect',
+						key: config.key,
+						raw: true
+					}
+					self.send(reconnect)
+				}
+				else if (verify.connection(connection)) {
+					var connect = {
+						type: 'connect',
+						connection: connection,
+						raw: true
+					}
+					self.send(connect)
+				}
+			}
+
+			var websocket = new WebSocket(url)
+			websocket.onopen = function(e) {
+				connect()
+			}
+
+			websocket.onmessage = function(e) {
+				var parsed = JSON.parse(e.data)
+				listeners.forEach(function(listener) {
+					listener(parsed)
 				})
 			}
-			if (locationSearch.key != null) {
-				var reconnect = {
-					type: 'reconnect',
-					key: locationSearch.key,
-					raw: true
-				}
-				this.send(reconnect)
-			}
-			else if (verify.connection(connection)) {
-				var connect = {
-					type: 'connect',
-					connection: connection,
-					raw: true
-				}
-				this.send(connect)
-			}
 		}
-
-		var websocket = new WebSocket(url)
-		websocket.onopen = function(e) {
-			self.connect()
-		}
-
-		websocket.onmessage = function(e) {
-			var parsed = JSON.parse(e.data)
-			listeners.forEach(function(listener) {
-				listener(parsed)
-			})
-		}
-
 	}
 	return Connection
 })
@@ -99,7 +93,21 @@ function($scope, $location, verify, Connection) {
 				console.log(parsed)
 			})
 	}
-	var connection = new Connection('ws://localhost:8080', [listener])
+	var connection = new Connection('ws://localhost:8080')
+	var locationSearch = $location.search()
+	, config = {
+		key: locationSearch.key,
+		connection: {
+				server: locationSearch.server,
+				nick: locationSearch.nick,
+				channels: locationSearch.channels.split(',').map(function(chan) {
+					if (chan.indexOf('#') == 0) return chan
+					return '#' + chan
+			})
+		}
+	}
+
+	connection.connect(config, [listener])
 
 
 
