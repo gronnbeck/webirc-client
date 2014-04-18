@@ -15,6 +15,45 @@ app.config(function($routeProvider) {
 
 })
 
+app.factory('api', function(IRCConnection) {
+	var parse = function(obj) {
+		try {
+			return JSON.parse(obj)
+		} catch(e) {
+			return {}
+		}
+	}
+	var all = function(callback) {
+		var all = localStorage.getItem('connections')
+		var parsed = _.isEmpty(all) ? {} : parse(all)
+		var connections = _.chain(parsed).map(function(conns) {
+			var c = JSON.parse(conns)
+			return new IRCConnection(
+				c.server,
+				c.nick,
+				c.chans,
+				c.key)
+		}).value()
+		callback(connections)
+	}
+	return {
+		all: function(callback) {
+			all(callback)
+		},
+		insert: function(connection, callback) {
+			all(function(connections) {
+				connections[connection.key] = JSON.stringify(connection)
+				localStorage.setItem('connections', JSON.stringify(connections))
+				callback(connections)
+			})
+
+		},
+		get: function(id, callback) {
+
+		}
+	}
+})
+
 app.factory('Verifier', function() {
 	function Verifier (key, verifier) {
 		this.key = key
@@ -96,9 +135,20 @@ app.factory('Connection', ['verify', function(verify) {
 	return Connection
 }])
 
+app.factory('IRCConnection', function() {
+	function IRCConnection(server, nick, chans, key) {
+		this.windows = []
+		this.key = key
+		this.server = server
+		this.nick = nick
+		this.chans = chans
+	}
+	return IRCConnection
+})
+
 app.controller('LogController', [
-'$scope', '$location', 'Connection', '$routeParams',
-function($scope, $location, Connection, $routeParams) {
+'$scope', 'Connection', '$routeParams', 'IRCConnection', 'api',
+function($scope, Connection, $routeParams, IRCConnection, api) {
 
 	$scope.events = []
 	$scope.allLogs = []
@@ -128,24 +178,29 @@ function($scope, $location, Connection, $routeParams) {
 	var listener = function(parsed) {
 			$scope.$apply(function() {
 				if (parsed.type == 'msg') $scope.allLogs.push(parsed)
+				if (parsed.type == 'connected')
 				console.log(parsed)
 			})
 	}
-	var connection = new Connection('ws://localhost:8080')
-	var locationSearch = $location.search()
-	, config = {
-		key: locationSearch.key,
-		connection: {
-				server: locationSearch.server,
-				nick: locationSearch.nick,
-				channels: locationSearch.channels.split(',').map(function(chan) {
-					if (chan.indexOf('#') == 0) return chan
-					return '#' + chan
-			})
-		}
-	}
 
-	var irc = connection.connect(config, [listener])
+
+	api.all(function(all) {
+		console.log(all)
+		var connConfig = _.first(all)
+		, config = {
+			key: connConfig.key,
+			connection: {
+					server: connConfig.server,
+					nick: connConfig.nick,
+					channels: connConfig.chans
+			}
+		}
+		
+		var connection = new Connection('ws://localhost:8080')
+		var irc = connection.connect(config, [listener])
+
+	})
+
 	$scope.to = ''
 	$scope.message = ''
 	$scope.send = function() {
