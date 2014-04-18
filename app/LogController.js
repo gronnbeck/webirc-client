@@ -27,6 +27,20 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
     return moment(date).format("HH:mm:ss")
   }
 
+  $scope.to = ''
+  $scope.message = ''
+  $scope.send = function() {
+    var msg = {
+      type: 'msg',
+      to: $scope.to,
+      key: locationSearch.key,
+      payload: $scope.message
+    }
+
+    irc.send(msg)
+    $scope.allLogs.push(_.extend(msg, { from: locationSearch.nick }))
+  }
+
   var listener = function(parsed) {
       $scope.$apply(function() {
         if (parsed.type == 'msg') $scope.allLogs.push(parsed)
@@ -35,10 +49,8 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
       })
   }
 
-
-  api.all(function(all) {
-    var connConfig = _.first(all)
-    , config = {
+  var try2connect = function(connConfig) {
+    var config = {
       key: connConfig.key,
       connection: {
           server: connConfig.server,
@@ -49,23 +61,14 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
 
     var connection = new Connection('ws://localhost:8080')
     var irc = connection.connect(config, [listener])
-
-  })
-
-  $scope.to = ''
-  $scope.message = ''
-  $scope.send = function() {
-      var msg = {
-        type: 'msg',
-        to: $scope.to,
-        key: locationSearch.key,
-        payload: $scope.message
-      }
-
-      irc.send(msg)
-      $scope.allLogs.push(_.extend(msg, { from: locationSearch.nick }))
   }
 
-
+  api.all(function(all) {
+    if (_.isEmpty(all)) {
+      return
+    }
+    var connConfig = _.first(all)
+    try2connect(connConfig)
+  })
 
 }])
