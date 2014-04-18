@@ -44,7 +44,7 @@ app.controller('LogController', [
 		var parsed = JSON.parse(e.data)
 		$scope.$apply(function() {
 			if (parsed.type == 'msg') $scope.events.push( JSON.stringify(parsed) )
-			else console.log(parsed)
+			console.log(parsed)
 		})
 	}
 
@@ -58,11 +58,19 @@ app.controller('LogController', [
 				return '#' + chan
 			})
 		}
-		if (verify.connection(connection)) {
+		if (locationSearch.key != null) {
+			var reconnect = JSON.stringify({
+				type: 'reconnect',
+				key: locationSearch.key,
+				raw: true
+			})
+			websocket.send(reconnect)
+		}
+		else if (verify.connection(connection)) {
 			var connect = JSON.stringify({
 				type: 'connect',
 				connection: connection,
-				key: null
+				raw: true
 			})
 			websocket.send(connect)
 		}
