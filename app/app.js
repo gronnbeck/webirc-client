@@ -3,10 +3,15 @@ var app = angular.module('irc-client', ['ngRoute'])
 app.config(function($routeProvider) {
 
 	$routeProvider
+	.when('/:from', {
+		templateUrl: 'templates/logs.html',
+		controller: 'LogController'
+	})
 	.when('/', {
 		templateUrl: 'templates/logs.html',
 		controller: 'LogController'
 	})
+
 })
 
 app.factory('Verifier', function() {
@@ -91,19 +96,34 @@ app.factory('Connection', ['verify', function(verify) {
 }])
 
 app.controller('LogController', [
-'$scope', '$location', 'Connection',
-function($scope, $location, Connection) {
+'$scope', '$location', 'Connection', '$routeParams',
+function($scope, $location, Connection, $routeParams) {
+
 	$scope.events = []
+	$scope.allLogs = []
+
+	var filter = function(from, me) {
+		if (from.indexOf('#') == -1) return function(log) {
+			return log.from == from &&
+			log.to == me
+		}
+		return function(log) {
+			return log.to == from
+		}
+	}
+
+	$scope.$watchCollection('allLogs', function(val) {
+		var filterFunc = filter($routeParams.from, $routeParams.nick)
+		$scope.events = val.filter(filterFunc)
+	})
 
 	$scope.parseDate = function(date) {
 		return moment(date).format("HH:mm:ss")
 	}
 
-
-
 	var listener = function(parsed) {
 			$scope.$apply(function() {
-				if (parsed.type == 'msg') $scope.events.push(parsed)
+				if (parsed.type == 'msg') $scope.allLogs.push(parsed)
 				console.log(parsed)
 			})
 	}
@@ -133,7 +153,7 @@ function($scope, $location, Connection) {
 			}
 
 			irc.send(msg)
-			$scope.events.push(_.extend(msg, { from: locationSearch.nick }))
+			$scope.allLogs.push(_.extend(msg, { from: locationSearch.nick }))
 	}
 
 
