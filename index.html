@@ -8,11 +8,11 @@
 </head>
 <body ng-app="irc-client">
 	<h1>IRC</h1>
-	<div ng-controller="LogController">
-		<div ng-repeat="event in events">
-			{{event.to}}
-			{{event.from}}
-			{{event.payload}}
+	<div class="logs" ng-controller="LogController">
+		<div class="log" ng-repeat="event in events">
+			<span class="to">{{event.to}}</span>
+			<span class="from">{{event.from}}</span>
+			<span class="payload">{{event.payload}}</span>
 		</div>
 
 	</div>
