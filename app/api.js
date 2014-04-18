@@ -32,7 +32,13 @@ app.factory('api', function(IRCConnection) {
 
     },
     get: function(id, callback) {
-
+      all(function(conns) {
+        var conn = _.chain(conns)
+        .filter(function(c) { return c.key == id })
+        .first()
+        .value()
+        callback(conn)
+      })
     }
   }
 })

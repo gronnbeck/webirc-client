@@ -43,22 +43,51 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
 
   var listener = function(parsed) {
       $scope.$apply(function() {
-        if (parsed.type == 'msg') $scope.allLogs.push(parsed)
-        if (parsed.type == 'connected')
-        console.log(parsed)
+        if (parsed.type == 'msg') { $scope.allLogs.push(parsed) }
+        if (parsed.type == 'disconnected') {
+
+          api.get(parsed.key, function(conn) {
+            var config = {
+              connection: {
+                server: conn.server,
+                nick: conn.nick,
+                channels: conn.chans
+              }
+            }
+
+            connect(config)
+          })
+
+        }
+        if (parsed.type == 'connected') {
+          var irc = new IRCConnection(
+            parsed.server,
+            parsed.nick,
+            parsed.server,
+            parsed.key
+          )
+
+          api.insert(irc, function() {
+            console.log('inserted')
+          })
+        }
       })
   }
 
   var try2connect = function(connConfig) {
     var config = {
       key: connConfig.key,
+      raw: true,
       connection: {
           server: connConfig.server,
           nick: connConfig.nick,
           channels: connConfig.chans
       }
     }
+    connect(connConfig)
+  }
 
+  var connect = function(config) {
     var connection = new Connection('ws://localhost:8080')
     var irc = connection.connect(config, [listener])
   }
