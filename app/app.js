@@ -35,7 +35,7 @@ app.factory('verify', ['Verifier', function(Verifier) {
 	}
 }])
 
-app.factory('Connection', function() {
+app.factory('Connection', ['verify', function(verify) {
 
 	function Connection(url) {
 
@@ -81,11 +81,11 @@ app.factory('Connection', function() {
 		}
 	}
 	return Connection
-})
+}])
 
 app.controller('LogController', [
-'$scope', '$location', 'verify', 'Connection',
-function($scope, $location, verify, Connection) {
+'$scope', '$location', 'Connection',
+function($scope, $location, Connection) {
 	$scope.events = []
 
 	$scope.parseDate = function(date) {
