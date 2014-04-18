@@ -15,80 +15,79 @@ h1 {
   header {
     height: @header-size;
   }
-  .logs-container {
-    height: 100%;
-    position:absolute;
-    top: 0;
-    box-sizing: border-box;
-    padding-top: @header-size;
-  }
-  .logs-wrapper {
-    height: 100%;
-    width: 500px;
-    padding-bottom: @input-size;
-    box-sizing: border-box;
-    background-color: @darkHighlight;
-    margin: 10px 20px;
-    padding: 10px;
-  }
-  .input {
-      position: absolute;
-      bottom: 0;
-      padding: 15px 5px;
-      height: @input-size;
-      width: 100%;
-      box-sizing: border-box;
-      .message, .to {
-         padding: 5px;
-         margin: 5px 0;
-         box-sizing: border-box;
-         width: 100%;
-      }
-      label {
-         display: block;
-      }
-  }
+}
 
-  .logs {
-    position: relative;
+.logs-container {
+  height: 100%;
+  position:absolute;
+  top: 0;
+  box-sizing: border-box;
+  padding-top: @header-size;
+}
+.logs-wrapper {
+  height: 100%;
+  width: 500px;
+  padding-bottom: @input-size;
+  box-sizing: border-box;
+  background-color: @darkHighlight;
+  margin: 10px 20px;
+  padding: 10px;
+}
+.input {
+    position: absolute;
+    bottom: 0;
+    padding: 15px 5px;
+    height: @input-size;
+    width: 100%;
+    box-sizing: border-box;
+    .message, .to {
+       padding: 5px;
+       margin: 5px 0;
+       box-sizing: border-box;
+       width: 100%;
+    }
+    label {
+       display: block;
+    }
+}
+
+.logs {
+  position: relative;
+  height:100%;
+  width: 100%;
+  .scroll {
+    position: absolute;
     height:100%;
     width: 100%;
-    .scroll {
-      position: absolute;
-      height:100%;
-      width: 100%;
-      bottom:0;
-      overflow: scroll;
-    }
-    .log {
-      margin: 0.2em 0;
-    }
+    bottom:0;
+    overflow: scroll;
+  }
+  .log {
+    margin: 0.2em 0;
+  }
 
-    .timestamp {
-      color: grey;
-      font-weight: lighter;
-      font-size: 0.8em;
-      margin-right: 0.2em;
-    }
+  .timestamp {
+    color: grey;
+    font-weight: lighter;
+    font-size: 0.8em;
+    margin-right: 0.2em;
+  }
 
-    .to {
-      &::before {
-        content: "-> "
-      }
-      &::after {
-        content: ": "
-      }
+  .to {
+    &::before {
+      content: "-> "
     }
-
-    .from, .to {
-      font-weight: bolder
+    &::after {
+      content: ": "
     }
   }
 
-  button {
-    background: lightblue;
-    color: @black;
+  .from, .to {
+    font-weight: bolder
   }
+}
 
-
+button {
+  background: lightblue;
+  color: @black;
 }
