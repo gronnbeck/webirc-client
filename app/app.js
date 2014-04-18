@@ -89,7 +89,9 @@ function($scope, $location, verify, Connection) {
 	$scope.events = []
 	var listener = function(parsed) {
 			$scope.$apply(function() {
-				if (parsed.type == 'msg') $scope.events.push(parsed)
+				var ts = new Date()
+				var extended = _.extend({ ts:  ts}, parsed)
+				if (parsed.type == 'msg') $scope.events.push(extended)
 				console.log(parsed)
 			})
 	}
