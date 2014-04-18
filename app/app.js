@@ -65,9 +65,4 @@ app.controller('LogController', [
 		}
 
 	}
-
-	$scope.send = function(msg) {
-		var stringified = JSON.stringify({type: 'msg', to: '#nplol', 'payload': msg})
-		websocket.send(stringified)
-	}
 }])
