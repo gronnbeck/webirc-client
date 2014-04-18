@@ -1,5 +1,5 @@
-@black: rgba(35, 35, 35, 1.0);
-@darkHighlight: rgba(84, 84, 84, 1.0);
+@black: rgba(44, 44, 45, 1.0);
+@darkHighlight: rgba(35, 35, 35, 1.0);
 @header-size: 50px;
 @input-size: 150px;
 body {
@@ -15,6 +15,18 @@ h1 {
   header {
     height: @header-size;
   }
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 100%;
+  padding-top: 15px;
+  padding-left: 15px;
+  box-sizing: border-box;
+  background: @darkHighlight;
 }
 
 .logs-container {
