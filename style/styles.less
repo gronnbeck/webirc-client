@@ -1,4 +1,6 @@
 @black: rgba(35, 35, 35, 1.0);
+@header-size: 50px;
+@input-size: 150px;
 body {
   background: @black;
   color: #fff;
@@ -9,8 +11,50 @@ h1 {
 }
 
 .container {
+  header {
+    height: @header-size;
+  }
+  .logs-container {
+    width: 600px;
+    height: 100%;
+    position:absolute;
+    top: 0;
+    box-sizing: border-box;
+    padding-top: @header-size;
+  }
+  .logs-wrapper {
+    height: 100%;
+    padding-bottom: @input-size;
+    box-sizing: border-box;
+    .input {
+        position: absolute;
+        bottom: 0;
+        padding: 15px 5px;
+        height: @input-size;
+        width: 100%;
+        box-sizing: border-box;
+         > input {
+           padding: 5px;
+           margin: 5px 0;
+           box-sizing: border-box;
+           width: 90%;
+         }
+         > label {
+           display: block;
+         }
+    }
+  }
   .logs {
-
+    position: relative;
+    height:100%;
+    width: 100%;
+    .scroll {
+      position: absolute;
+      height:100%;
+      width: 100%;
+      bottom:0;
+      overflow: scroll;
+    }
     .log {
       margin: 0.2em 0;
     }
@@ -41,20 +85,5 @@ h1 {
     color: @black;
   }
 
-  .input {
-      position: fixed;
-      bottom: 0;
-      margin: 15px 5px;
-      width: 100%;
-      box-sizing: border-box;
-       > input {
-         padding: 5px;
-         margin: 5px 0;
-         box-sizing: border-box;
-         width: 90%;
-       }
-       > label {
-         display: block;
-       }
-  }
+
 }
