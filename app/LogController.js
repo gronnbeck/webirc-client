@@ -37,7 +37,6 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
 
 
   api.all(function(all) {
-    console.log(all)
     var connConfig = _.first(all)
     , config = {
       key: connConfig.key,
