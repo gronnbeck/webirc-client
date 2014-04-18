@@ -1,4 +1,4 @@
-var app = angular.module('irc-client', ['ngRoute']);
+var app = angular.module('irc-client', ['ngRoute'])
 
 app.config(function($routeProvider) {
 })
@@ -37,16 +37,16 @@ app.factory('verify', ['Verifier', function(Verifier) {
 
 app.controller('LogController', [
 '$scope', '$location', 'verify', function($scope, $location, verify) {
-	var websocket = new WebSocket('ws://localhost:8080');
+	var websocket = new WebSocket('ws://localhost:8080')
 
-	$scope.events = [];
+	$scope.events = []
 	websocket.onmessage = function(e) {
-		var parsed = JSON.parse(e.data);
+		var parsed = JSON.parse(e.data)
 		$scope.$apply(function() {
-			if (parsed.type == 'msg') $scope.events.push( JSON.stringify(parsed) );
-			else console.log(parsed);
-		});
-	};
+			if (parsed.type == 'msg') $scope.events.push( JSON.stringify(parsed) )
+			else console.log(parsed)
+		})
+	}
 
 	$scope.connect = function() {
 		var locationSearch = $location.search()
@@ -60,14 +60,14 @@ app.controller('LogController', [
 				type: 'connect',
 				connection: connection,
 				key: null
-			});
-			websocket.send(connect);
+			})
+			websocket.send(connect)
 		}
 
-	};
+	}
 
 	$scope.send = function(msg) {
-		var stringified = JSON.stringify({type: 'msg', to: '#nplol', 'payload': msg});
-		websocket.send(stringified);
-	};
-}]);
+		var stringified = JSON.stringify({type: 'msg', to: '#nplol', 'payload': msg})
+		websocket.send(stringified)
+	}
+}])
