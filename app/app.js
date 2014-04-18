@@ -39,6 +39,10 @@ app.controller('LogController', [
 '$scope', '$location', 'verify', function($scope, $location, verify) {
 	var websocket = new WebSocket('ws://localhost:8080')
 
+	websocket.onopen = function(e) {
+		connect()
+	}
+
 	$scope.events = []
 	websocket.onmessage = function(e) {
 		var parsed = JSON.parse(e.data)
@@ -48,7 +52,7 @@ app.controller('LogController', [
 		})
 	}
 
-	$scope.connect = function() {
+	var connect = function() {
 		var locationSearch = $location.search()
 		, connection = {
 			server: locationSearch.server,
@@ -74,6 +78,6 @@ app.controller('LogController', [
 			})
 			websocket.send(connect)
 		}
-
 	}
+
 }])

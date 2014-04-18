@@ -7,15 +7,12 @@
 	<script type="text/javascript" src="app/app.js"></script>
 </head>
 <body ng-app="irc-client">
+	<h1>IRC</h1>
 	<div ng-controller="LogController">
 		<div ng-repeat="event in events">
 			{{event.to}}
 			{{event.from}}
 			{{event.payload}}
-		</div>
-
-		<div>
-			<button ng-click="connect()">Connect</button>
 		</div>
 
 	</div>
