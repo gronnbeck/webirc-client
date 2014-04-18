@@ -87,11 +87,14 @@ app.controller('LogController', [
 '$scope', '$location', 'verify', 'Connection',
 function($scope, $location, verify, Connection) {
 	$scope.events = []
+
+	$scope.parseDate = function(date) {
+		return moment(date).format("HH:mm:ss")
+	}
+
 	var listener = function(parsed) {
 			$scope.$apply(function() {
-				var ts = new Date()
-				var extended = _.extend({ ts:  ts}, parsed)
-				if (parsed.type == 'msg') $scope.events.push(extended)
+				if (parsed.type == 'msg') $scope.events.push(parsed)
 				console.log(parsed)
 			})
 	}
