@@ -43,7 +43,7 @@ app.controller('LogController', [
 	websocket.onmessage = function(e) {
 		var parsed = JSON.parse(e.data)
 		$scope.$apply(function() {
-			if (parsed.type == 'msg') $scope.events.push( JSON.stringify(parsed) )
+			if (parsed.type == 'msg') $scope.events.push( parsed )
 			console.log(parsed)
 		})
 	}
