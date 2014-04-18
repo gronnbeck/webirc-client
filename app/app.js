@@ -3,14 +3,15 @@ var app = angular.module('irc-client', ['ngRoute'])
 app.config(function($routeProvider) {
 
 	$routeProvider
-	.when('/:from', {
-		templateUrl: 'templates/logs.html',
-		controller: 'LogController'
-	})
 	.when('/', {
 		templateUrl: 'templates/logs.html',
 		controller: 'LogController'
 	})
+	.when('/:from', {
+		templateUrl: 'templates/logs.html',
+		controller: 'LogController'
+	})
+
 
 })
 
@@ -103,6 +104,9 @@ function($scope, $location, Connection, $routeParams) {
 	$scope.allLogs = []
 
 	var filter = function(from, me) {
+		if (_.isEmpty(from)) {
+			return function() { return true }
+		}
 		if (from.indexOf('#') == -1) return function(log) {
 			return log.from == from &&
 			log.to == me
