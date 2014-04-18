@@ -1,4 +1,7 @@
-var app = angular.module('irc-client', []);
+var app = angular.module('irc-client', ['ngRoute']);
+
+app.config(function($routeProvider) {
+})
 
 app.controller('LogController', ['$scope', function($scope) {
 	var websocket = new WebSocket('ws://localhost:8080');
@@ -13,12 +16,12 @@ app.controller('LogController', ['$scope', function($scope) {
 	};
 
 	$scope.connect = function() {
-		var connect = JSON.stringify({ 
-			type: 'connect', 
+		var connect = JSON.stringify({
+			type: 'connect',
 			connection: {
-				server: 'irc.freenode.net', 
-				nick: 'tester-irc-proxy', 
-				channels: ['#nplol', '#pekkabot'] 
+				server: 'irc.freenode.net',
+				nick: 'tester-irc-proxy',
+				channels: ['#pekkabot']
 			},
 			key: null
 		});
