@@ -53,7 +53,10 @@ app.controller('LogController', [
 		, connection = {
 			server: locationSearch.server,
 			nick: locationSearch.nick,
-			channels: locationSearch.channels.split(',')
+			channels: locationSearch.channels.split(',').map(function(chan) {
+				if (chan.indexOf('#') == 0) return chan
+				return '#' + chan
+			})
 		}
 		if (verify.connection(connection)) {
 			var connect = JSON.stringify({
