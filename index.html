@@ -15,15 +15,23 @@
 
 </head>
 <body ng-app="irc-client">
-	<h1>IRC</h1>
-	<div class="logs" ng-controller="LogController">
-		<div class="log" ng-repeat="event in events">
-			<span class="timestamp">{{parseDate(event.ts)}}</span>
-			<span class="from">{{event.from}}</span>
-			<span class="to">{{event.to}}</span>
-			<span class="payload">{{event.payload}}</span>
+	<div class="container" ng-controller="LogController">
+		<h1>IRC</h1>
+		<div class="logs">
+			<div class="log" ng-repeat="event in events">
+				<span class="timestamp">{{parseDate(event.ts)}}</span>
+				<span class="from">{{event.from}}</span>
+				<span class="to">{{event.to}}</span>
+				<span class="payload">{{event.payload}}</span>
+			</div>
 		</div>
-
+		<div class="input">
+			<label>To</label>
+			<input class="to" ng-model="to"/>
+			<label>Message</label>
+			<input class="message" ng-model="message"/>
+			<button ng-click="send()">Send</button>
+		</div>
 	</div>
 </body>
 </html>

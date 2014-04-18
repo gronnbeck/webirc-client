@@ -1,5 +1,6 @@
+@black: rgba(35, 35, 35, 1.0);
 body {
-  background: rgba(35, 35, 35, 1.0);
+  background: @black;
   color: #fff;
   font-family: 'Helvetica Nueu', 'Helvetica', sans-serif;
 }
@@ -7,29 +8,53 @@ h1 {
   font-size: 3em;
 }
 
-.logs {
+.container {
+  .logs {
 
-  .log {
-    margin: 0.2em 0;
-  }
-
-  .timestamp {
-    color: grey;
-    font-weight: lighter;
-    font-size: 0.8em;
-    margin-right: 0.2em;
-  }
-
-  .to {
-    &::before {
-      content: "-> "
+    .log {
+      margin: 0.2em 0;
     }
-    &::after {
-      content: ": "
+
+    .timestamp {
+      color: grey;
+      font-weight: lighter;
+      font-size: 0.8em;
+      margin-right: 0.2em;
+    }
+
+    .to {
+      &::before {
+        content: "-> "
+      }
+      &::after {
+        content: ": "
+      }
+    }
+
+    .from, .to {
+      font-weight: bolder
     }
   }
 
-  .from, .to {
-    font-weight: bolder
+  button {
+    background: lightblue;
+    color: @black;
+  }
+
+  .input {
+      position: fixed;
+      bottom: 0;
+      margin: 15px 5px;
+      width: 100%;
+      box-sizing: border-box;
+       > input {
+         padding: 5px;
+         margin: 5px 0;
+         box-sizing: border-box;
+         width: 90%;
+       }
+       > label {
+         display: block;
+       }
   }
 }

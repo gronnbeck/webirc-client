@@ -78,6 +78,7 @@ app.factory('Connection', ['verify', function(verify) {
 					listener(parsed)
 				})
 			}
+			return self
 		}
 	}
 	return Connection
@@ -91,6 +92,8 @@ function($scope, $location, Connection) {
 	$scope.parseDate = function(date) {
 		return moment(date).format("HH:mm:ss")
 	}
+
+
 
 	var listener = function(parsed) {
 			$scope.$apply(function() {
@@ -112,7 +115,20 @@ function($scope, $location, Connection) {
 		}
 	}
 
-	connection.connect(config, [listener])
+	var irc = connection.connect(config, [listener])
+	$scope.to = ''
+	$scope.message = ''
+	$scope.send = function() {
+			var msg = {
+				type: 'msg',
+				to: $scope.to,
+				key: locationSearch.key,
+				payload: $scope.message
+			}
+
+			irc.send(msg)
+			$scope.events.push(_.extend(msg, { from: locationSearch.nick }))
+	}
 
 
 
