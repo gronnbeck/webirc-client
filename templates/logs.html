@@ -9,13 +9,15 @@
             <span class="payload">{{event.payload}}</span>
         </div>
       </div>
-    </div>
-    <div class="input">
-      <label>To</label>
-      <input class="to" ng-model="to"/>
-      <label>Message</label>
-      <input class="message" ng-model="message"/>
-      <button ng-click="send()">Send</button>
+      <div class="input">
+        <div class="input-wrapper">
+          <label>To</label>
+          <input class="to" ng-model="to"/>
+          <label>Message</label>
+          <input class="message" ng-model="message"/>
+          <button ng-click="send()">Send</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

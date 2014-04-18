@@ -16,7 +16,6 @@ h1 {
     height: @header-size;
   }
   .logs-container {
-    width: 600px;
     height: 100%;
     position:absolute;
     top: 0;
@@ -25,29 +24,31 @@ h1 {
   }
   .logs-wrapper {
     height: 100%;
+    width: 500px;
     padding-bottom: @input-size;
     box-sizing: border-box;
     background-color: @darkHighlight;
-    border-radius:10px;
+    margin: 10px 20px;
     padding: 10px;
-    .input {
-        position: absolute;
-        bottom: 0;
-        padding: 15px 5px;
-        height: @input-size;
-        width: 100%;
-        box-sizing: border-box;
-         > input {
-           padding: 5px;
-           margin: 5px 0;
-           box-sizing: border-box;
-           width: 90%;
-         }
-         > label {
-           display: block;
-         }
-    }
   }
+  .input {
+      position: absolute;
+      bottom: 0;
+      padding: 15px 5px;
+      height: @input-size;
+      width: 100%;
+      box-sizing: border-box;
+      .message, .to {
+         padding: 5px;
+         margin: 5px 0;
+         box-sizing: border-box;
+         width: 100%;
+      }
+      label {
+         display: block;
+      }
+  }
+
   .logs {
     position: relative;
     height:100%;
