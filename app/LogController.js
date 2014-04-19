@@ -71,6 +71,7 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
             console.log('inserted')
           })
         }
+        console.log(parsed)
       })
   }
 
