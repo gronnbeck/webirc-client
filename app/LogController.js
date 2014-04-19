@@ -4,10 +4,13 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
 
   $scope.events = []
   $scope.allLogs = []
+  $scope.to = ''
+  $scope.message = ''
+  $scope.chans = []
 
   var filter = function(from, me) {
     if (_.isEmpty(from)) {
-      return function() { return true }
+      return function() { return false }
     }
     if (from.indexOf('#') == -1) return function(log) {
       return log.from == from &&
@@ -27,8 +30,11 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
     return moment(date).format("HH:mm:ss")
   }
 
-  $scope.to = ''
-  $scope.message = ''
+  $scope.parseUri = function(uri) {
+    return uri.replace('#', '%23')
+  }
+
+
   $scope.send = function() {
     var msg = {
       type: 'msg',
@@ -38,12 +44,20 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
     }
 
     irc.send(msg)
-    $scope.allLogs.push(_.extend(msg, { from: locationSearch.nick }))
+    received(_.extend(msg, { from: locationSearch.nick }))
+  }
+
+  var received = function(message) {
+    $scope.allLogs.push(message)
+    if (message.to.indexOf('#') == 0) {
+      if (!_.contains($scope.chans, message.to))
+        $scope.chans.push(message.to)
+    }
   }
 
   var listener = function(parsed) {
       $scope.$apply(function() {
-        if (parsed.type == 'msg') { $scope.allLogs.push(parsed) }
+        if (parsed.type == 'msg') { received(parsed) }
         if (parsed.type == 'disconnected') {
 
           api.get(parsed.key, function(conn) {

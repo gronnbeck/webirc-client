@@ -23,4 +23,7 @@
 </div>
 <nav class="navigation">
   IRC
+  <div ng-repeat="chan in chans">
+    <a href="#/{{ parseUri(chan) }}">{{ chan }}</a>
+  </div>
 </nav>
