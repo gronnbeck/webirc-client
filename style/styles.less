@@ -1,6 +1,6 @@
 @black: rgba(44, 44, 45, 1.0);
 @darkHighlight: rgba(35, 35, 35, 1.0);
-@input-size: 150px;
+@input-height: 150px;
 body {
   background: @black;
   color: #fff;
@@ -34,7 +34,7 @@ nav {
 .logs-wrapper {
   height: 95%;
   width: 500px;
-  padding-bottom: @input-size;
+  padding-bottom: @input-height;
 
   background-color: @darkHighlight;
   margin: 2.5% 20px;
@@ -45,7 +45,7 @@ nav {
     position: absolute;
     bottom: 0;
     padding: 15px 5px;
-    height: @input-size;
+    height: @input-height;
     width: 100%;
     box-sizing: border-box;
     .message, .to {
@@ -63,12 +63,14 @@ nav {
   position: relative;
   height:100%;
   width: 100%;
+  overflow: hidden;
   .scroll {
     position: absolute;
     height:100%;
     width: 100%;
     bottom:0;
     overflow: scroll;
+    margin-bottom: @input-height;
   }
   .log {
     margin: 0.2em 0;
