@@ -9,8 +9,7 @@ app.factory('api', function(IRCConnection) {
   var all = function(callback) {
     var all = localStorage.getItem('connections')
     var parsed = _.isEmpty(all) ? {} : parse(all)
-    var connections = _.chain(parsed).map(function(conns) {
-      var c = JSON.parse(conns)
+    var connections = _.chain(parsed).map(function(c) {
       return new IRCConnection(
         c.server,
         c.nick,
