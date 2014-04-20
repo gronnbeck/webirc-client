@@ -1,6 +1,9 @@
 <div class="logs-container">
   <div class="logs-wrapper">
     <div class="logs">
+      <div class="scroll-wrap">
+
+
       <div class="scroll">
         <div class="log" ng-repeat="event in events">
             <span class="timestamp">{{parseDate(event.ts)}}</span>
@@ -8,6 +11,8 @@
             <span class="to">{{event.to}}</span>
             <span class="payload">{{event.payload}}</span>
         </div>
+      </div>
+      
       </div>
       <div class="input">
         <div class="input-wrapper">
