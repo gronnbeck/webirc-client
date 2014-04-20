@@ -1,5 +1,6 @@
 var from = ['marvin', 'zaphod', 'trillian', 'arthur', 'ford', 'slatibartfast']
 , chans = ['#magrathea', '#earth', '#Betelgeuse']
+, sources = chans.concat(from)
 , sentences = [
   "\"Space,\" it says, \"is big. Really big. You just won't believe how vastly, hugely, mindbogglingly big it is. I mean, you may think it's a long way down the road to the chemist's, but that's just peanuts to space, listen...\"",
   "There's an infinite number of monkeys outside who want to talk to us about this script for Hamlet they've worked out.",
@@ -18,7 +19,7 @@ var from = ['marvin', 'zaphod', 'trillian', 'arthur', 'ford', 'slatibartfast']
     res.push({
       type: 'msg',
       from: random(from),
-      to: random(chans),
+      to: random(sources),
       payload: random(sentences)
     })
   }
