@@ -1,0 +1,15 @@
+<nav class="navigation">
+  IRC
+  <div ng-repeat="chan in chans">
+    <a href="#/{{ parseUri(chan) }}">{{ chan }}</a>
+  </div>
+
+  <form class="new-network">
+    Add new
+    <label for="network">Network</label>
+    <input type="text" name="network" placeholder="IRC server url">
+    <label for="nick">Nick</label>
+    <input type="text" name="nick" placeholder="Your nickname">
+    <input type="button" name="submit" value="Add">
+  </form>
+</nav>

@@ -6,7 +6,6 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
   $scope.allLogs = []
   $scope.to = ''
   $scope.message = ''
-  $scope.chans = []
 
   var filter = function(from, me) {
     if (_.isEmpty(from)) {
@@ -30,10 +29,6 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
     return moment(date).format("HH:mm:ss")
   }
 
-  $scope.parseUri = function(uri) {
-    return uri.replace('#', '%23')
-  }
-
 
   $scope.send = function() {
     var msg = {
@@ -50,8 +45,7 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
   var received = function(message) {
     $scope.allLogs.push(message)
     if (message.to.indexOf('#') == 0) {
-      if (!_.contains($scope.chans, message.to))
-        $scope.chans.push(message.to)
+      $scope.$emit('irc-add-channel', message.to)
     }
   }
 
@@ -85,7 +79,7 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
             console.log('inserted')
           })
         }
-        console.log(parsed)
+        //console.log(parsed)
       })
   }
 
