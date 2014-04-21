@@ -24,9 +24,12 @@ app.factory('api', function(IRCConnection) {
     },
     insert: function(connection, callback) {
       all(function(connections) {
-        connections[connection.key] = JSON.stringify(connection)
-        localStorage.setItem('connections', JSON.stringify(connections))
-        callback(connections)
+
+        var updated = [connection]
+
+        localStorage.setItem('connections', JSON.stringify(updated))
+
+        callback(updated)
       })
 
     },
