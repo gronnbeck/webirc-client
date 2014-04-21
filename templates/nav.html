@@ -1,5 +1,5 @@
 <nav class="navigation">
-  IRC
+  {{ model.server || 'IRC'}}
   <div ng-repeat="chan in chans">
     <a href="#/{{ parseUri(chan) }}">{{ chan }}</a>
   </div>
@@ -7,9 +7,9 @@
   <form class="new-network">
     Add new
     <label for="network">Network</label>
-    <input type="text" name="network" placeholder="IRC server url">
+    <input type="text" name="network" placeholder="IRC server url" ng-model="network">
     <label for="nick">Nick</label>
-    <input type="text" name="nick" placeholder="Your nickname">
-    <input type="button" name="submit" value="Add">
+    <input type="text" name="nick" placeholder="Your nickname" ng-model="nick">
+    <input type="button" name="submit" value="Add" ng-click="addNetwork()">
   </form>
 </nav>

@@ -93,7 +93,7 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
           channels: connConfig.chans
       }
     }
-    connect(connConfig)
+    connect(config)
   }
 
   var connect = function(config) {
