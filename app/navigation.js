@@ -45,6 +45,10 @@ app.directive('navigation', function() {
         })
       }
 
+      $scope.ifNoNetworkAdded = function() {
+        return $scope.model == null
+      }
+
       refresh()
     }
   }

@@ -4,7 +4,7 @@
     <a href="#/{{ parseUri(chan) }}">{{ chan }}</a>
   </div>
 
-  <form class="new-network">
+  <form class="new-network" ng-show="ifNoNetworkAdded()">
     Add new
     <label for="network">Network</label>
     <input type="text" name="network" placeholder="IRC server url" ng-model="network">
