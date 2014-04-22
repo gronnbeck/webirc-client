@@ -3,7 +3,6 @@ app.directive('navigation', function() {
     restrict: 'E',
     templateUrl: 'templates/nav.html',
     controller: function($scope, $rootScope, api, IRCConnection) {
-      $scope.model = {}
 
       $scope.parseUri = function(uri) {
         return uri.replace('#', '%23')
@@ -11,16 +10,24 @@ app.directive('navigation', function() {
 
       $rootScope.$on('irc-add-channel', function(event, chan) {
         if (!_.contains($scope.model.windows, chan)) {
-          $scope.model.windows.push(chan)
+          $scope.chans.push(chan)
         }
       })
 
       var refresh = function() {
         api.all(function(all) {
-          $scope.model = _.first(all) || {}
-          $scope.chans = $scope.model.windows
+          $scope.model = _.first(all)
+          if (!_.isEmpty($scope.model)) {
+            $scope.chans = _.clone($scope.model.windows)
+          }
         })
       }
+
+      $scope.$watch('chans', function(newVal) {
+        if (!_.isEmpty($scope.model)) {
+          $scope.model.windows = newVal
+        }
+      })
 
 
       var save = function() {
