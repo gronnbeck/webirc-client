@@ -1,11 +1,13 @@
 app.controller('LogController', [
-'$scope', 'Connection', '$routeParams', 'IRCConnection', 'api',
-function($scope, Connection, $routeParams, IRCConnection, api) {
+'$scope', 'Connection', '$routeParams', 'IRCConnection', 'api', 'config',
+function($scope, Connection, $routeParams, IRCConnection, api, config) {
 
   $scope.events = []
   $scope.allLogs = []
   $scope.to = ''
   $scope.message = ''
+
+  var uri = config.uri
 
   var filter = function(from, me) {
     if (_.isEmpty(from)) {
@@ -97,7 +99,7 @@ function($scope, Connection, $routeParams, IRCConnection, api) {
   }
 
   var connect = function(config) {
-    var connection = new Connection('ws://localhost:8080')
+    var connection = new Connection(uri)
     var irc = connection.connect(config, [listener])
   }
 
