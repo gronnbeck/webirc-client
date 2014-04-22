@@ -3,6 +3,7 @@ app.directive('navigation', function() {
     restrict: 'E',
     templateUrl: 'templates/nav.html',
     controller: function($scope, $rootScope, api, IRCConnection) {
+      $scope.model = {}
 
       $scope.parseUri = function(uri) {
         return uri.replace('#', '%23')
@@ -16,7 +17,7 @@ app.directive('navigation', function() {
 
       var refresh = function() {
         api.all(function(all) {
-          $scope.model = _.first(all)
+          $scope.model = _.first(all) || {}
           $scope.chans = $scope.model.windows
         })
       }
