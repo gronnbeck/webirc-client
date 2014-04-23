@@ -1,6 +1,6 @@
 app.controller('LogController', [
-'$scope', 'Connection', '$routeParams', 'IRCConnection', 'api', 'config',
-function($scope, Connection, $routeParams, IRCConnection, api, config) {
+'$scope', 'Connection', '$routeParams', 'IRCConnection', 'api', 'config', 'irc',
+function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
 
   $scope.events = []
   $scope.allLogs = []
@@ -40,7 +40,7 @@ function($scope, Connection, $routeParams, IRCConnection, api, config) {
       payload: $scope.message
     }
 
-    irc.send(msg)
+    self.send(msg)
     received(_.extend(msg, { from: locationSearch.nick }))
   }
 
@@ -50,68 +50,9 @@ function($scope, Connection, $routeParams, IRCConnection, api, config) {
       $scope.$emit('irc-add-channel', message.to)
     }
   }
-
-  var listener = function(parsed) {
-      $scope.$apply(function() {
-        if (parsed.type == 'msg') { received(parsed) }
-        if (parsed.type == 'disconnected') {
-
-          api.get(parsed.key, function(conn) {
-            var config = {
-              connection: {
-                server: conn.server,
-                nick: conn.nick,
-                channels: conn.chans
-              }
-            }
-
-            connect(config)
-          })
-
-        }
-        if (parsed.type == 'connected') {
-          var irc = new IRCConnection(
-            parsed.server,
-            parsed.nick,
-            parsed.server,
-            parsed.key
-          )
-
-          api.insert(irc, function() {
-            console.log('inserted')
-          })
-        }
-        if (parsed.type == 'disconnected') {
-          console.log(parsed)
-        }
-        //console.log(parsed)
-      })
-  }
-
-  var try2connect = function(connConfig) {
-    var config = {
-      key: connConfig.key,
-      raw: true,
-      connection: {
-          server: connConfig.server,
-          nick: connConfig.nick,
-          channels: connConfig.chans
-      }
-    }
-    connect(config)
-  }
-
-  var connect = function(config) {
-    var connection = new Connection(uri)
-    var irc = connection.connect(config, [listener])
-  }
-
-  api.all(function(all) {
-    if (_.isEmpty(all)) {
-      return
-    }
-    var connConfig = _.first(all)
-    try2connect(connConfig)
+  var self = this
+  IRC([received], function(bindings) {
+    self.send = bindings.send
   })
 
 }])
