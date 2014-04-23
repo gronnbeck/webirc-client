@@ -81,6 +81,9 @@ function($scope, Connection, $routeParams, IRCConnection, api, config) {
             console.log('inserted')
           })
         }
+        if (parsed.type == 'disconnected') {
+          console.log(parsed)
+        }
         //console.log(parsed)
       })
   }
