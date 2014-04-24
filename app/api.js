@@ -13,7 +13,7 @@ app.factory('api', function($http) {
 
     },
     get: function(id) {
-      return $http.get('/api/users/id')
+      return $http.get('/api/user/' + id)
     }
   }
 })

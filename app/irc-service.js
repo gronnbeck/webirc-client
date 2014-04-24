@@ -55,6 +55,11 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
       try2connect(connConfig)
     })
 
+
+    api.get('kengroenn@gmail.com').success(function(user) {
+      
+    })
+
   }
 
 
