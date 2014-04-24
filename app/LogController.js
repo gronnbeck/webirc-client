@@ -23,6 +23,8 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
   }
 
   $scope.$watchCollection('allLogs', function(val) {
+    if (val == null) return
+
     var filterFunc = filter($routeParams.from, $routeParams.nick)
     $scope.events = val.filter(filterFunc)
   })
@@ -32,9 +34,7 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
   }
 
   var received = function(message) {
-    $scope.$apply(function(){
-        $scope.allLogs.push(message)
-    })
+    $scope.allLogs.push(message)
 
     if (message.to.indexOf('#') == 0) {
       $scope.$emit('irc-add-channel', message.to)
@@ -43,7 +43,8 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
 
   var userId = localStorage.getItem('userId')
 
-  IRC(userId, [received]).connect(function(connection) {
+  var irc = IRC(userId, [received])
+  irc.connect(function(connection) {
       $scope.send = function() {
         var msg = {
           type: 'msg',
@@ -54,6 +55,7 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
 
         connection.send(msg)
         received(_.extend(msg, { from: locationSearch.nick }))
+
       }
   })
 
