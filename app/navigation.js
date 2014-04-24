@@ -4,6 +4,7 @@ app.directive('navigation', function() {
     templateUrl: 'templates/nav.html',
     controller: function($scope, $rootScope, api, IRCConnection) {
       $scope.chans = []
+      var id =  localStorage.getItem('userId')
 
       $scope.parseUri = function(uri) {
         return uri.replace('#', '%23')
@@ -28,8 +29,14 @@ app.directive('navigation', function() {
         , nick = $scope.nick
         , channels = ['#nplol']
         , connection = new IRCConnection(network, nick, channels, null)
-        api.insert(connection, function() {
-          console.log('added a new connection')
+        api.get(id).success(function(user) {
+
+          user.connections = [connection]
+
+          api.insert(id, user).success(function() {
+            console.log('Successfully updated user:')
+            console.log(user)
+          })
         })
       }
 

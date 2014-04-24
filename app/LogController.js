@@ -31,29 +31,30 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
     return moment(date).format("HH:mm:ss")
   }
 
-
-  $scope.send = function() {
-    var msg = {
-      type: 'msg',
-      to: $scope.to,
-      key: locationSearch.key,
-      payload: $scope.message
-    }
-
-    self.send(msg)
-    received(_.extend(msg, { from: locationSearch.nick }))
-  }
-
   var received = function(message) {
-    $scope.allLogs.push(message)
+    $scope.$apply(function(){
+        $scope.allLogs.push(message)
+    })
+
     if (message.to.indexOf('#') == 0) {
       $scope.$emit('irc-add-channel', message.to)
     }
   }
-  var self = this
-  var userId = $routeParams.id
-  IRC(userId, [received], function(bindings) {
-    self.send = bindings.send
+
+  var userId = localStorage.getItem('userId')
+
+  IRC(userId, [received]).connect(function(connection) {
+      $scope.send = function() {
+        var msg = {
+          type: 'msg',
+          to: $scope.to,
+          key: locationSearch.key,
+          payload: $scope.message
+        }
+
+        connection.send(msg)
+        received(_.extend(msg, { from: locationSearch.nick }))
+      }
   })
 
 }])

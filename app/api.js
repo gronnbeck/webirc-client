@@ -9,8 +9,8 @@ app.factory('api', function($http) {
     register: function() {
 
     },
-    insert: function(user) {
-
+    insert: function(id, user) {
+      return $http.post('/api/user/' + id, user)
     },
     get: function(id) {
       return $http.get('/api/user/' + id)
