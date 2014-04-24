@@ -9,17 +9,7 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
         }
         if (parsed.type == 'disconnected') {
 
-          api.get(parsed.key, function(conn) {
-            var config = {
-              connection: {
-                server: conn.server,
-                nick: conn.nick,
-                channels: conn.chans
-              }
-            }
-
-            connect(config)
-          })
+          console.log('handle reconnect')
 
         }
         if (parsed.type == 'connected') {

@@ -1,50 +1,19 @@
-app.factory('api', function(IRCConnection, verify) {
-  var parse = function(obj) {
-    try {
-      return JSON.parse(obj)
-    } catch(e) {
-      return {}
-    }
-  }
-  var all = function(callback) {
-    var all = localStorage.getItem('connections')
-    var parsed = _.isEmpty(all) ? {} : parse(all)
-    if (_.isEmpty(parsed)) {
-      callback([])
-    } else {
-      var connections = _.chain(parsed).map(function(c) {
-        return new IRCConnection(
-          c.server,
-          c.nick,
-          c.chans,
-          c.key)
-      }).value()
-      callback(connections)
-    }
+app.factory('api', function($http) {
+  var all = function() {
+    console.log('DEPRECATED: Not part of the new API')
   }
   return {
-    all: function(callback) {
-      all(callback)
+    all: function() {
+      return all()
     },
-    insert: function(connection, callback) {
-      all(function(connections) {
-
-        var updated = [connection]
-
-        localStorage.setItem('connections', JSON.stringify(updated))
-
-        callback(updated)
-      })
+    register: function() {
 
     },
-    get: function(id, callback) {
-      all(function(conns) {
-        var conn = _.chain(conns)
-        .filter(function(c) { return c.key == id })
-        .first()
-        .value()
-        callback(conn)
-      })
+    insert: function(user) {
+
+    },
+    get: function(id) {
+      return $http.get('/api/users/id')
     }
   }
 })
