@@ -1,6 +1,8 @@
 app.factory('irc', function(Connection, IRCConnection, api, config) {
   var uri = config.uri
   return function(userId, listeners, bind) {
+    var connection = new Connection(uri)
+
     var listener = function(parsed) {
         if (parsed.type == 'msg') {
           _.each(listeners, function(listen) {
@@ -13,16 +15,8 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
 
         }
         if (parsed.type == 'connected') {
-          var irc = new IRCConnection(
-            parsed.server,
-            parsed.nick,
-            parsed.server,
-            parsed.key
-          )
-
-          api.insert(irc, function() {
-            console.log('inserted')
-          })
+          // rethink the way we handle connection
+          console.log('handle connected components')
         }
     }
 
@@ -40,26 +34,25 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
     }
 
     var connect = function(config) {
-      var connection = new Connection(uri)
       var irc = connection.connect(config, [listener])
       bind({
         send: irc.send
       })
     }
 
-    api.all(function(all) {
-      if (_.isEmpty(all)) {
-        return
-      }
-      var connConfig = _.first(all)
-      try2connect(connConfig)
-    })
-
-
     api.get(userId).success(function(user) {
-
+      if (_.has(user, 'connections')) {
+        console.log('Should update a shared-state user')
+        var connConfig = _.first(user.connections)
+        try2connect(connConfig)
+      } else {
+        console.log('Handle if user does not have any connections')
+      }
     })
 
+    return {
+      connect: try2connect
+    }
   }
 
 
