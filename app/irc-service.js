@@ -1,6 +1,6 @@
 app.factory('irc', function(Connection, IRCConnection, api, config) {
   var uri = config.uri
-  return function(listeners, bind) {
+  return function(userId, listeners, bind) {
     var listener = function(parsed) {
         if (parsed.type == 'msg') {
           _.each(listeners, function(listen) {
@@ -56,8 +56,8 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
     })
 
 
-    api.get('kengroenn@gmail.com').success(function(user) {
-      
+    api.get(userId).success(function(user) {
+
     })
 
   }

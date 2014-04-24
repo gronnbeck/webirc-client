@@ -51,7 +51,8 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
     }
   }
   var self = this
-  IRC([received], function(bindings) {
+  var userId = $routeParams.id
+  IRC(userId, [received], function(bindings) {
     self.send = bindings.send
   })
 
