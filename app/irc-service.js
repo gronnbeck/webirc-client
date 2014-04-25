@@ -1,6 +1,7 @@
 app.factory('irc', function(Connection, IRCConnection, api, config) {
   var uri = config.uri
   var _connection = null
+  var _info = null
   var connection = new Connection(uri)
   var logs = []
 
@@ -21,15 +22,17 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
 
         }
         if (parsed.type == 'connected') {
-          // rethink the way we handle connection
+          _info = parsed
+          _callback(_connection, _info)
           console.log('handle connected components')
         }
     }
 
+    var _callback
     var connect = function(callback) {
 
       if (_connection !== null && _connection !== undefined) {
-        callback(_connection)
+        callback(_connection, _info)
         _.each(logs, function(log) {
           pushMessage(log)
         })
@@ -52,9 +55,7 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
               }
             }
             _connection = connection.connect(config, [listener])
-
-            callback(_connection)
-
+            _callback = callback
           }
           else {
             console.log('Handle if user does not have any connections')

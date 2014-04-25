@@ -4,7 +4,7 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
 
   $scope.events = []
   $scope.allLogs = []
-  $scope.to = ''
+  $scope.to = $routeParams.from
   $scope.message = ''
 
   var uri = config.uri
@@ -44,17 +44,17 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
   var userId = localStorage.getItem('userId')
 
   var irc = IRC(userId, [received])
-  irc.connect(function(connection) {
+  irc.connect(function(connection, info) {
       $scope.send = function() {
         var msg = {
           type: 'msg',
           to: $scope.to,
-          key: locationSearch.key,
+          key: info.key,
           payload: $scope.message
         }
 
         connection.send(msg)
-        received(_.extend(msg, { from: locationSearch.nick }))
+        received(_.extend(msg, { from: info.nick }))
 
       }
   })
