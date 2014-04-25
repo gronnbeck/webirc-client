@@ -1,11 +1,8 @@
 app.controller('LogController', [
-'$scope', 'Connection', '$routeParams', 'IRCConnection', 'api', 'config', 'irc',
-function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
+'$scope', 'Connection', '$routeParams', 'IRCConnection', 'api', 'config', 'IRCContainer',
+function($scope, Connection, $routeParams, IRCConnection, api, config, IRCContainer) {
 
-  $scope.events = []
   $scope.allLogs = []
-  $scope.to = $routeParams.from
-  $scope.message = ''
 
   var uri = config.uri
 
@@ -22,11 +19,9 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
     }
   }
 
-  $scope.$watchCollection('allLogs', function(val) {
-    if (val == null) return
-
+  $scope.$watchCollection('allLogs', function(newVal, oldVal) {
     var filterFunc = filter($routeParams.from, $routeParams.nick)
-    $scope.events = val.filter(filterFunc)
+    $scope.events = newVal.filter(filterFunc)
   })
 
   $scope.parseDate = function(date) {
@@ -42,13 +37,11 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
   }
 
   var userId = localStorage.getItem('userId')
-
-  var irc = IRC(userId, [received])
-  irc.connect(function(connection, info) {
+  var onopen = function(connection, info) {
       $scope.send = function() {
         var msg = {
           type: 'msg',
-          to: $scope.to,
+          to: $routeParams.from,
           key: info.key,
           payload: $scope.message
         }
@@ -57,6 +50,8 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRC) {
         received(_.extend(msg, { from: info.nick }))
 
       }
-  })
+  }
+
+  IRCContainer.get(userId, onopen, [received])
 
 }])

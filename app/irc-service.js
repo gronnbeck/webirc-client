@@ -1,11 +1,28 @@
+app.factory('IRCContainer', function(irc) {
+  var map = {}
+  return {
+    get: function(userId, onopen, listeners) {
+      if (_.has(map, userId)) {
+        var connection = map[userId]
+        connection.rewind(listeners)
+        return connection
+      }
+      else {
+        var connection = irc(userId, listeners)
+        connection.connect(onopen)
+        map[userId] = connection
+        return connection
+      }
+    }
+  }
+})
+
 app.factory('irc', function(Connection, IRCConnection, api, config) {
   var uri = config.uri
-  var _connection = null
-  var connection = new Connection(uri)
-  var _info = null
-  var logs = []
 
   return function(userId, listeners) {
+
+    var logs = []
 
     var pushMessage = function(message) {
       _.each(listeners, function(listen) {
@@ -13,61 +30,74 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
       })
     }
 
+    var listener = function(message) {
+        if (message.type == 'msg') {
+          logs.push(message)
+          pushMessage(message)
+        }
+        if (message.type == 'disconnected') {
+          console.log('handle reconnect')
+        }
+    }
+
     var connect = function(callback) {
 
-      if (_connection !== null && _connection !== undefined) {
-        callback(_connection, _info)
-        _.each(logs, function(log) {
-          pushMessage(log)
-        })
-      }
-      else {
+      var connection = new Connection(uri)
+      api.get(userId).success(function(user) {
 
-        api.get(userId).success(function(user) {
+        if (_.has(user, 'connections')) {
+          console.log('Should update a shared-state user')
+          var connConfig = _.first(user.connections)
 
-          if (_.has(user, 'connections')) {
-            console.log('Should update a shared-state user')
-            var connConfig = _.first(user.connections)
-
-            var config = {
-              key: connConfig.key,
-              raw: true,
-              connection: {
-                  server: connConfig.server,
-                  nick: connConfig.nick,
-                  channels: connConfig.chans
-              }
+          var config = {
+            key: connConfig.key,
+            raw: true,
+            connection: {
+                server: connConfig.server,
+                nick: connConfig.nick,
+                channels: connConfig.chans
             }
-
-            var listener = function(message) {
-                if (message.type == 'msg') {
-                  logs.push(message)
-                  pushMessage(message)
-                }
-                if (message.type == 'disconnected') {
-                  console.log('handle reconnect')
-                }
-            }
-
-            var onopen = function(message, connection) {
-              _info = message
-              callback(connection, _info)
-            }
-            _connection = connection.connect(config, onopen, listener)
-
           }
-          else {
-            console.log('Handle if user does not have any connections')
+
+          var onopen = function(message, ircConnection) {
+            callback(ircConnection, message)
           }
-        })
-      }
+
+          connection.connect(config, onopen, listener)
+
+        }
+        else {
+          console.log('Handle if user does not have any connections')
+        }
+      })
+    }
+
+    var rewind = function(newListeners) {
+      /*
+       * Don't really like the solution of
+       * overwriting the listeners on rewind
+       *
+       * Added because when new LogControllers
+       * for each route was created the listeners
+       * no longer responded, and we needed to attach
+       * new listeners.
+       *
+       * Should look for a solution were the listener
+       * list is manipulated at an higher abstraction
+       * level
+       *
+       */
+      listeners = newListeners
+      logs.forEach(function(message) {
+        pushMessage(message)
+      })
     }
 
     return {
-      connect: connect
+      connect: connect,
+      rewind: rewind
     }
 
   }
-
 
 })
