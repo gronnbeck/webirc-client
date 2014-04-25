@@ -3,14 +3,22 @@ app.factory('IRCContainer', function(irc) {
   return {
     get: function(userId, onopen, listeners) {
       if (_.has(map, userId)) {
-        var connection = map[userId]
+        var connection = map[userId].connection
+        onopen(map[userId].irc, map[userId].info)
         connection.rewind(listeners)
         return connection
       }
       else {
         var connection = irc(userId, listeners)
-        connection.connect(onopen)
-        map[userId] = connection
+        connection.connect(function(ircConnection, info) {
+          onopen(ircConnection, info)
+          map[userId] = {
+            connection: connection,
+            irc: ircConnection,
+            info: info
+          }
+        })
+
         return connection
       }
     }

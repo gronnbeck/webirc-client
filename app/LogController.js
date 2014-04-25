@@ -28,9 +28,21 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRCContai
     return moment(date).format("HH:mm:ss")
   }
 
-  var received = function(message) {
-    $scope.allLogs.push(message)
+  $scope.safeApply = function(fn) {
+  var phase = this.$root.$$phase;
+  if(phase == '$apply' || phase == '$digest') {
+    if(fn && (typeof(fn) === 'function')) {
+      fn();
+    }
+  } else {
+    this.$apply(fn);
+  }
+};
 
+  var received = function(message) {
+    $scope.safeApply(function() {
+      $scope.allLogs.push(message)
+    })
     if (message.to.indexOf('#') == 0) {
       $scope.$emit('irc-add-channel', message.to)
     }
@@ -45,7 +57,7 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRCContai
           key: info.key,
           payload: $scope.message
         }
-
+        
         connection.send(msg)
         received(_.extend(msg, { from: info.nick }))
 
