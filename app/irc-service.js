@@ -49,9 +49,9 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
                 }
             }
 
-            var onopen = function(message) {
+            var onopen = function(message, connection) {
               _info = message
-              callback(_connection, _info)
+              callback(connection, _info)
             }
             _connection = connection.connect(config, [onopen], [listener])
 

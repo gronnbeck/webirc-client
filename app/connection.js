@@ -32,7 +32,7 @@ app.factory('Connection', ['verify', function(verify) {
       }
 
       var websocket = new WebSocket(url)
-      var handleMessage = function(message) {
+      handleMessage = function(message) {
         listeners.forEach(function(listener) {
           listener(message)
         })
@@ -44,7 +44,7 @@ app.factory('Connection', ['verify', function(verify) {
 
       var handleHandshake = function(message) {
         onopen.forEach(function(callback){
-          callback(message)
+          callback(message, self)
         })
       }
 
