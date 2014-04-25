@@ -53,7 +53,7 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
               _info = message
               callback(connection, _info)
             }
-            _connection = connection.connect(config, [onopen], [listener])
+            _connection = connection.connect(config, onopen, listener)
 
           }
           else {

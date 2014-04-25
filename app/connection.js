@@ -8,6 +8,14 @@ app.factory('Connection', ['verify', function(verify) {
       , onopen = onopen || []
       , connection = config.connection
 
+      if (!_.isArray(onopen)) {
+        onopen = [onopen]
+      }
+      
+      if (!_.isArray(listeners)) {
+        listeners = [listeners]
+      }
+
       self.send = function(message) {
         websocket.send(JSON.stringify(message))
       }
