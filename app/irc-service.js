@@ -65,8 +65,7 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
     }
 
     return {
-      connect: connect,
-      logs: logs
+      connect: connect
     }
   }
 
