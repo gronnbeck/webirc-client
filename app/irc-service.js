@@ -1,34 +1,18 @@
 app.factory('irc', function(Connection, IRCConnection, api, config) {
   var uri = config.uri
   var _connection = null
-  var _info = null
   var connection = new Connection(uri)
+  var _info = null
   var logs = []
 
   return function(userId, listeners) {
+
     var pushMessage = function(message) {
       _.each(listeners, function(listen) {
         listen(message)
       })
     }
-    var listener = function(parsed) {
-        if (parsed.type == 'msg') {
-          logs.push(parsed)
-          pushMessage(parsed)
-        }
-        if (parsed.type == 'disconnected') {
 
-          console.log('handle reconnect')
-
-        }
-        if (parsed.type == 'connected') {
-          _info = parsed
-          _callback(_connection, _info)
-          console.log('handle connected components')
-        }
-    }
-
-    var _callback
     var connect = function(callback) {
 
       if (_connection !== null && _connection !== undefined) {
@@ -54,8 +38,23 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
                   channels: connConfig.chans
               }
             }
-            _connection = connection.connect(config, [listener])
-            _callback = callback
+
+            var listener = function(message) {
+                if (message.type == 'msg') {
+                  logs.push(message)
+                  pushMessage(message)
+                }
+                if (message.type == 'disconnected') {
+                  console.log('handle reconnect')
+                }
+            }
+
+            var onopen = function(message) {
+              _info = message
+              callback(_connection, _info)
+            }
+            _connection = connection.connect(config, [onopen], [listener])
+
           }
           else {
             console.log('Handle if user does not have any connections')
@@ -67,6 +66,7 @@ app.factory('irc', function(Connection, IRCConnection, api, config) {
     return {
       connect: connect
     }
+
   }
 
 

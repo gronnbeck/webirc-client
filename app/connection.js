@@ -2,9 +2,10 @@ app.factory('Connection', ['verify', function(verify) {
 
   function Connection(url) {
 
-    this.connect = function(config, listeners) {
+    this.connect = function(config, onopen, onmessage) {
       var self = this
-      , listeners = listeners || []
+      , listeners = onmessage || []
+      , onopen = onopen || []
       , connection = config.connection
 
       self.send = function(message) {
@@ -31,15 +32,34 @@ app.factory('Connection', ['verify', function(verify) {
       }
 
       var websocket = new WebSocket(url)
+      var handleMessage = function(message) {
+        listeners.forEach(function(listener) {
+          listener(message)
+        })
+      }
+
+      var isMessage = function(message) {
+        return message.type !== 'connected'
+      }
+
+      var handleHandshake = function(message) {
+        onopen.forEach(function(callback){
+          callback(message)
+        })
+      }
+
+      var isHandshake = function(message) {
+        return message.type === 'connected'
+      }
+
       websocket.onopen = function(e) {
         connect()
       }
 
-      websocket.onmessage = function(e) {
-        var parsed = JSON.parse(e.data)
-        listeners.forEach(function(listener) {
-          listener(parsed)
-        })
+      websocket.onmessage = function(raw) {
+        var message = JSON.parse(raw.data)
+        if (isMessage(message)) handleMessage(message)
+        else if (isHandshake(message)) handleHandshake(message)
       }
       return self
     }
