@@ -1,9 +1,11 @@
 <div class="logs-container">
+
   <div class="logs-wrapper">
+    <div class="current-filter">
+      {{ current }}
+    </div>
     <div class="logs">
       <div class="scroll-wrap">
-
-
       <div class="scroll" scroll-bottom>
         <div class="log" ng-repeat="event in events">
             <span class="timestamp">{{parseDate(event.ts)}}</span>

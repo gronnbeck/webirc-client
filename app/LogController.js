@@ -3,6 +3,7 @@ app.controller('LogController', [
 function($scope, $routeParams, IRCContainer) {
 
   $scope.allLogs = []
+  $scope.current = $routeParams.from
 
   var filter = function(from, me) {
     if (_.isEmpty(from)) {
