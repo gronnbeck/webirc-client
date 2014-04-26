@@ -1,10 +1,8 @@
 app.controller('LogController', [
-'$scope', 'Connection', '$routeParams', 'IRCConnection', 'api', 'config', 'IRCContainer',
-function($scope, Connection, $routeParams, IRCConnection, api, config, IRCContainer) {
+'$scope', '$routeParams', 'IRCContainer',
+function($scope, $routeParams, IRCContainer) {
 
   $scope.allLogs = []
-
-  var uri = config.uri
 
   var filter = function(from, me) {
     if (_.isEmpty(from)) {
@@ -57,7 +55,7 @@ function($scope, Connection, $routeParams, IRCConnection, api, config, IRCContai
           key: info.key,
           payload: $scope.message
         }
-        
+
         connection.send(msg)
         received(_.extend(msg, { from: info.nick }))
 
